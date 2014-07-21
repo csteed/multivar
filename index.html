@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+html { height: 100% }
+body { height: 100%; 
+	margin: 0; 
+	padding: 0;
+}
+
+
+#map_svg {
+	height: 100%;
+	width: 85%;
+	float: left;
+}
+
+#right_panel {
+	height: 100%;
+	width: 15%;
+	background-color: #eee;
+	float: left;
+}
+
+#info_box {
+	height: 150px;
+	width: 100%;
+	background-color: white;
+}
+
+.select_box {
+	height: 70px;
+	width: 100%
+}
+
+.legend_box {
+	height: 30px;
+	width: 100%;
+	background-color: white;
+}
+
+.domain_box {
+	height: 100%;
+	width: 15%;
+	float: left;
+	text-align: center;
+}
+
+.scale_svg {
+	height: 30px;
+	width: 70%;
+	float: left;
+}
+
+#date_box {
+	height: 20px;
+	width: 100%;
+}
+
+.date_button {
+	width: 10%;
+	height: 100%;
+	float: left;
+}
+
+#date_select {
+	width: 100%;
+	float: left;
+}
+
+#date_display {
+	height: 100%;
+	width: 80%;
+	float: left;
+}
+
+
+.state {
+  fill: #fff;
+  stroke: #000;
+}
+
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.land {
+  fill: none;
+  stroke: #000;
+}
+
+.boundary {
+  fill: none;
+  stroke: #000;
+}
+
+
+    </style>
+  </head>
+  <body>
+  	<svg id = "map_svg"></svg>
+  	<div id = "right_panel">
+  		<div id = "info_box"></div>
+  		<div id = "date_box">
+  			<select id = "date_select" onchange = "set_date()"></select>
+  		</div>
+  		<div class = "select_box">
+  			Color: <br/>
+  			<select id = "color_select" onchange = "update_select(colorSelect, update_color)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "color_lbnd"></div>
+	  			<svg class = "scale_svg" id = "color_svg">
+	  				<rect x = 0% y = 10% width = 20% height = 80% fill = "rgb(255, 255, 178)"></rect>
+	  				<rect x = 20% y = 10% width = 20% height = 80% fill = "rgb(254, 198, 104)"></rect>
+	  				<rect x = 40% y = 10% width = 20% height = 80% fill = "rgb(253, 141, 60)"></rect>
+	  				<rect x = 60% y = 10% width = 20% height = 80% fill = "rgb(221, 70, 49)"></rect>
+	  				<rect x = 80% y = 10% width = 20% height = 80% fill = "rgb(189,0,38)"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "color_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Orientation: <br/>
+  			<select id = "orient_select" onchange = "update_select(orientSelect, update_orient)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "orient_lbnd"></div>
+	  			<svg class = "scale_svg" id = "orient_svg">
+	  				<svg x = 10% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black"></rect>
+	  				</svg>
+	  				<svg x = 30% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(22.5)"></rect>
+	  				</svg>
+	  				<svg x = 50% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(45)"></rect>
+	  				</svg>
+	  				<svg x = 70% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(67.5)"></rect>
+	  				</svg>
+	  				<svg x = 90% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(90)"></rect>
+	  				</svg>
+	  			</svg>
+	  			<div class = "domain_box" id = "orient_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Size: <br/>
+  			<select id = "size_select" onchange = "update_select(sizeSelect, update_size)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "size_lbnd"></div>
+	  			<svg class = "scale_svg" id = "size_svg">
+	  				<rect x = 9% y = 40% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 28.25% y = 32.5% width = 3.5% height = 35% fill = "black"></rect>
+	  				<rect x = 47.5% y = 25% width = 5% height = 50% fill = "black"></rect>
+	  				<rect x = 66.75% y = 17.5% width = 6.5% height = 65% fill = "black"></rect>
+	  				<rect x = 86% y = 10% width = 8% height = 80% fill = "black"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "size_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Stroke: <br/>
+  			<select id = "stroke_select" onchange = "update_select(strokeSelect, update_stroke)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "stroke_lbnd"></div>
+	  			<svg class = "scale_svg" id = "stroke_svg">
+	  				<rect x = 6% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 0></rect>
+	  				<rect x = 26% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 0.75></rect>
+	  				<rect x = 46% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 1.5></rect>
+	  				<rect x = 66% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 2.25></rect>
+	  				<rect x = 86% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 3></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "stroke_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Regularity: <br/>
+  			<select id = "reg_select" onchange = "update_select(regSelect, update_reg)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "reg_lbnd"></div>
+	  			<svg class = "scale_svg" id = "reg_svg">
+	  			</svg>
+	  			<div class = "domain_box" id = "reg_ubnd"></div>
+  			</div>
+  		</div>
+  	</div>
+  	
+    <script type="text/javascript" src="d3.v3.min.js"></script>
+    <script type="text/javascript" src="topojson.v1.min.js"></script>
+    <script type="text/javascript">
+    
+//different for each mode!
+var names, colorScl, orientScl, sizeScl, strokeScl, regScl, 
+colorName, orientName, sizeName, strokeName, regName,
+init_date_select, date_to_fname, drawData, getNearestValue, g, projection, init_map;
+
+var DEFAULT_W, DEFAULT_H, DEFAULT_REG;
+
+
+    
+var NDFDnames = {
+	"Temperature (F)": {
+		fName: "T_",
+		bounds: [0, 120],
+	},
+	"Precipitation (in)": {
+		fName: "QPF_",
+		bounds: [0, 1.5],
+	},
+	"Rel. Humidity (%)": {
+		fName: "RH_",
+		bounds: [0, 100],
+	},
+	"Wind Speed (kts)": {
+		fName: "WindSpd_",
+		bounds: [0, 50], 
+	},
+	"Convective Outlook (severity)": {
+		fName: "ConvOutlook_",
+		bounds: [0, 8],
+	},
+	"": {
+		fName: "asdfjkl;",
+		bounds: [0, 1],
+	}
+};    
+
+var CLMnames = {
+	"AR": {
+		fName: "AR",
+		bounds: [0, 2E-4],
+	},
+	"BTRAN": {
+		fName: "BTRAN",
+		bounds: [0, 1],
+	},
+	"FSA": {
+		fName: "FSA",
+		bounds: [0, 500],
+	},
+	"FSH": {
+		fName: "FSH",
+		bounds: [-100, 200],
+	},
+	"GPP": {
+		fName: "GPP",
+		bounds: [0, 1E-4],
+	},
+	"GR": {
+		fName: "GR",
+		bounds: [0, 1E-4],
+	},
+	"HTOP": {
+		fName: "HTOP",
+		bounds: [0, 20],
+	},
+	"LEAFC": {
+		fName: "LEAFC",
+		bounds: [0, 200],
+	},
+	"LEAFC_LOSS": {
+		fName: "LEAFC_LOSS",
+		bounds: [0, 1E-4],
+	},
+	"NPP": {
+		fName: "NPP",
+		bounds: [0, -1E-10],
+	},
+	"QBOT": {
+		fName: "QBOT",
+		bounds: [0, 0.1],
+	},
+	"QVEGT": {
+		fName: "QVEGT",
+		bounds: [0, 1E-4],
+	},
+	"RAIN": {
+		fName: "RAIN",
+		bounds: [0, 1E-4],
+	},
+	"TG": {
+		fName: "TG",
+		bounds: [0, 400],
+	},
+	"TLAI": {
+		fName: "TLAI",
+		bounds: [0, 10],
+	},
+	"TOTVEGC": {
+		fName: "TOTVEGC",
+		bounds: [0, 30000],
+	},
+	"TSA": {
+		fName: "TSA",
+		bounds: [100, 400],
+	},
+	"TV": {
+		fName: "TV",
+		bounds: [100, 400],
+	},
+	"U10": {
+		fName: "U10",
+		bounds: [0, 5],
+	},
+	"WIND": {
+		fName: "WIND",
+		bounds: [0, 10]
+	},
+	"WOODC": {
+		fName: "WOODC",
+		bounds: [0, 30000],
+	},
+	"": {
+		fName: "asdfjkl;",
+		bounds: [0, 1]
+	}
+}
+
+var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    
+
+
+var NUM_COLORS = 3;
+
+
+//================================================CHANGE THE MODE HERE!!=======================================================
+init_CLM();
+//init_NDFD();
+
+
+var colorSelect = document.getElementById("color_select");
+init_select(colorSelect, 0);
+var orientSelect = document.getElementById("orient_select");
+init_select(orientSelect, 1);
+var sizeSelect = document.getElementById("size_select");
+init_select(sizeSelect, 2);
+var strokeSelect = document.getElementById("stroke_select");
+init_select(strokeSelect, 3);
+var regSelect = document.getElementById("reg_select");
+init_select(regSelect, 4);
+
+var dateSelect = document.getElementById("date_select");
+
+init_date_select();
+
+init_map();
+
+
+function init_CLM() {
+	names = CLMnames;
+	
+	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"/*"rgb(37, 52, 148)", "rgb(44, 127, 184)","rgb(161, 218, 180)", "rgb(255, 255, 204)"*/]).clamp("true");
+	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
+	sizeScl = d3.scale.linear().range([0.5, 2.0]).clamp("true");
+	strokeScl = d3.scale.linear().range([0, 1]).clamp("true");//3
+	regScl = d3.scale.linear().range([0, 2]).clamp("true");//8
+
+	DEFAULT_W = 1; //2
+	DEFAULT_H = 2; //4
+	DEFAULT_REG = 0.4;
+	
+	colorName = "AR";//"Temperature (F)";
+	orientName = "BTRAN";//"Precipitation (in)";
+	sizeName = "FSA";//"Rel. Humidity (%)";
+	strokeName = "FSH";//"Wind Speed (kts)";
+	regName = "GPP";//"Convective Outlook (severity)";
+	
+	init_date_select = CLMinit_date_select;
+	date_to_fname = CLMdate_to_fname;
+	drawData = CLMdrawData;
+	getNearestValue = CLMgetNearestValue;
+	
+	init_map = CLMinit_map;
+}
+
+function init_select(sel, startIdx) {
+	for(var name in names) {
+		var option = document.createElement("option");
+		option.value = name;
+		option.text = name;
+		sel.add(option);
+	}
+	
+	sel.selectedIndex = startIdx;
+}
+
+function update_select(sel, update) {
+	update(sel.options[sel.selectedIndex].value, true);
+}
+
+function CLMinit_date_select() {
+	for(var year = 2001; year <= 2015; year++) {
+		for(var month = 1; month <= 12; month++) {
+			var option = document.createElement("option");
+			option.value = date_to_fname(year, month);
+			option.text = monthNames[month-1] + " " + year;
+			dateSelect.add(option);
+		}
+	}
+	dateSelect.selectedIndex = 0;
+}
+
+function set_date() {
+	drawData();
+}
+
+/*function format_date(d) {
+	var n = (100000000 + (d.getMonth()+1) * 1000000 + d.getDate() * 10000 + d.getHours() * 100);
+	var s = "" + n;
+	return s.substring(1, s.length);
+}*/
+
+function CLMdate_to_fname(year, month) {
+	var s = (10000 + year - 1850 + month * 0.01) + ".json"
+	return s.substring(1, s.length);
+}
+
+/*function drawData() {
+	var filenames = [];
+	var d = new Date(startDate.getTime());
+	var path = "data/7.1.14.revised/"
+	for (var i = 0; i < NUM_TIMESTEPS; i++){
+		for(var j in names) {
+			filenames.push(path + names[j].fName + "/" + names[j].fName + format_date(d) + "_2.5_0.0_0.0reduced.csv");
+		}
+		d.setHours(d.getHours() + HOUR_INTERVAL);
+	}
+	
+	multi_csv(filenames, init_rects);
+}*/
+
+function CLMdrawData() {
+	var path = "data/CLM/"
+	d3.json(path + dateSelect.options[dateSelect.selectedIndex].value, function(error, data) {
+		init_rects(data.geo_data);
+	});
+}
+
+function multi_csv(filenames, draw) {
+	var combined = new Object();
+	var result = new Array();
+	var ready = 0;
+	var target = filenames.length;
+	
+	for(var i = 0; i < filenames.length; i++) {
+		d3.csv(filenames[i], function(data) {
+			if(data != null) {
+				var valName = Object.keys(data[0])[2];
+				var j, lat, lng;
+				for(j = 0; j < data.length; j++) {
+					lat = data[j].Lat;
+					lng = data[j].Lng;
+					if(combined[lat] == undefined) {
+						combined[lat] = new Object();
+					}
+					if(combined[lat][lng] == undefined) {
+						combined[lat][lng] = new Object();
+					}
+					combined[lat][lng][valName] = parseFloat(data[j][valName]);
+				}
+				
+				ready += 1;
+			}
+			else {
+				target -= 1;
+			}
+			if(ready == target) {
+				finalize();
+			}
+		});
+	}
+	
+	function finalize() {
+		for(var lat in combined) {
+			for(var lng in combined[lat]) {
+				result.push({
+					Lat: parseFloat(lat),
+					Lng: parseFloat(lng),
+					Values: combined[lat][lng]
+				});
+			}
+		}
+		
+		draw(result);
+	}
+	
+}
+
+function CLMinit_map() {
+	projection = d3.geo.equirectangular()
+    .scale(200)
+    .translate([650, 360]);
+
+	var path = d3.geo.path()
+    .projection(projection);
+
+	var svg = d3.select("#map_svg");
+
+	g = svg.append("svg:g");
+
+	var zoom = d3.behavior.zoom()
+    .on("zoom",function() {
+        g.attr("transform","translate("+ 
+            d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+  	});
+ 
+	svg.call(zoom);
+	
+	d3.json("world-110m.json", function(error, world) {
+	  	g.insert("path", ".graticule")
+	      .datum(topojson.feature(world, world.objects.land))
+	      .attr("class", "land")
+	      .attr("d", path);
+	
+	  	g.insert("path", ".graticule")
+	      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+	      .attr("class", "boundary")
+	      .attr("d", path);
+	      
+		drawData();
+	});
+}
+
+function init_rects(data) {
+	
+	g.selectAll(".dataRect")
+	.data(data)
+	.enter()
+	.append("path")
+	.attr("class", "dataRect")
+	.attr("opacity", 0.9)
+	.attr("stroke", "black")
+	.on("click", function(d) {
+		display_info("Lat: " + d["Lat"].toPrecision(5) + "<br/>Lng: " + d["Lng"].toPrecision(5) 
+		+ "<br/>" + colorName + ": " + format(colorName, d)
+		+ "<br/>" + orientName + ": " + format(orientName, d)
+		+ "<br/>" + sizeName + ": " + format(sizeName, d)
+		+ "<br/>" + strokeName + ": " + format(strokeName, d)
+		+ "<br/>" + regName + ": " + format(regName, d));
+	});
+	
+	update_color(colorName);
+	update_orient(orientName, false);
+	update_size(sizeName, false);
+	update_stroke(strokeName);
+	update_reg(regName, true);
+	
+	display_date(curDate);
+}
+
+function format(name, d) {
+	var val = getNearestValue(d, name);
+	if(val == undefined) {return "N/A";}
+	return "" + val.toPrecision(5);
+}
+
+function box_num_format(n) {
+	if(n >= 1000 || (n < 0.001 && n > 0)) {
+		return n.toExponential(0);
+	}
+	return n;
+}
+
+function update_color(name) {
+	colorName = name;
+	
+	var dom = [names[colorName].bounds[0]];
+	var incr = names[colorName].bounds[1] / (NUM_COLORS-1);
+	for(var i = 0; i < NUM_COLORS-1; i++) {
+		dom.push(dom[i]+incr);
+	}
+	
+	colorScl.domain(dom);
+	
+	d3.selectAll(".dataRect").attr("fill", function(d) {
+		var c = getNearestValue(d, colorName);
+		if(c == undefined) {
+			return "#dddddd";
+		}
+		return colorScl(c);
+	});
+	
+	d3.select("#color_lbnd").html(box_num_format(names[colorName].bounds[0]));
+	d3.select("#color_ubnd").html(box_num_format(names[colorName].bounds[1]));
+}
+
+function update_orient(name, refresh) {
+	orientName = name;
+	orientScl.domain(names[orientName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#orient_lbnd").html(box_num_format(names[orientName].bounds[0]));
+	d3.select("#orient_ubnd").html(box_num_format(names[orientName].bounds[1]));
+}
+
+function update_size(name, refresh) {
+	sizeName = name;
+	sizeScl.domain(names[sizeName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#size_lbnd").html(box_num_format(names[sizeName].bounds[0]));
+	d3.select("#size_ubnd").html(box_num_format(names[sizeName].bounds[1]));
+}
+
+function update_path() {
+	d3.selectAll(".dataRect").attr("d", function(d) {
+		var s = getNearestValue(d, sizeName);
+		var size = sizeScl(s);
+		if(s == undefined) {
+			size = 1;
+		}
+		
+		var t = getNearestValue(d, orientName);
+		var theta = orientScl(t);
+		if(t == undefined) {
+			theta = 0;
+		}
+		
+		var r = getNearestValue(d, regName);
+		var reg = regScl(r);
+		if(r == undefined) {
+			reg = DEFAULT_REG;
+		}
+		
+		return rotate_rect(d.Lat, d.Lng, DEFAULT_W*size, DEFAULT_H*size, theta, reg);
+	});
+}
+
+function update_stroke(name) {
+	strokeName = name;
+	strokeScl.domain(names[strokeName].bounds);
+	
+	d3.selectAll(".dataRect").attr("stroke-width", function(d) {
+		var s = getNearestValue(d, strokeName);
+		if(s == undefined) {
+			return 0;
+		}
+		return strokeScl(s);
+	});
+	
+	d3.select("#stroke_lbnd").html(box_num_format(names[strokeName].bounds[0]));
+	d3.select("#stroke_ubnd").html(box_num_format(names[strokeName].bounds[1]));
+}
+
+function update_reg(name, refresh) {
+	regName = name;
+	regScl.domain(names[regName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#reg_lbnd").html(box_num_format(names[regName].bounds[0]));
+	d3.select("#reg_ubnd").html(box_num_format(names[regName].bounds[1]));
+}
+
+function NDFDgetNearestValue(point, name, date) {
+	var d = new Date();
+	var key = " " + names[name].fName + year + format_date(d);
+	for(var dist = 0; dist <= NUM_TIMESTEPS/2; dist++) {
+		d.setTime(date.getTime());
+		d.setHours(d.getHours() - dist * HOUR_INTERVAL);
+		key = " " + names[name].fName + year + format_date(d);
+		if(point.Values[key] != undefined) {
+			return point.Values[key];
+		}
+		
+		d.setHours(d.getHours() + 2 * dist * HOUR_INTERVAL);
+		key = " " + names[name].fName + year + format_date(d);
+		if(point.Values[key] != undefined) {
+			return point.Values[key];
+		}
+	}
+}
+
+function CLMgetNearestValue(point, name) {
+	return point[names[name].fName];
+}
+
+/*returns a path string.
+ * theta in radians*/
+function rotate_rect (lat, lng, w, h, theta, reg) {
+	var cx = projection([lng, lat])[0] + jitter(lng, lat, reg);
+	var cy = projection([lng, lat])[1] + jitter(lat, lng, reg);
+	var x0 = cx + rotateX(w, h, theta);
+	var y0 = cy + rotateY(w, h, theta);
+	var x1 = cx + rotateX(-w, h, theta);
+	var y1 = cy + rotateY(-w, h, theta);
+	var x2 = cx + rotateX(-w, -h, theta);
+	var y2 = cy + rotateY(-w, -h, theta);
+	var x3 = cx + rotateX(w, -h, theta);
+	var y3 = cy + rotateY(w, -h, theta);
+	return "M " + x0 + " " + y0 + " L " + x1 + " " + y1 + " L " + x2 + " " + y2 + " L " + x3 + " " + y3 + " L " + x0 + " " + y0;
+}
+
+function rotateX(x, y, theta) {
+	return x * Math.cos(theta) - y * Math.sin(theta);
+}
+
+function rotateY(x, y, theta) {
+	return x * Math.sin(theta) + y * Math.cos(theta);
+}
+
+function display_info(message) {
+	d3.select("#info_box").html(message);
+}
+
+function update_date(sign) {
+	curDate.setHours(curDate.getHours() + sign * HOUR_INTERVAL);
+	if(curDate.getTime() < startDate.getTime()) {
+		curDate.setTime(startDate.getTime());
+	} else
+	if(curDate.getTime() > endDate.getTime()) {
+		curDate.setTime(endDate.getTime());
+	}
+	
+	display_date(curDate);
+	
+	update_color(colorName);
+	update_orient(orientName, false);
+	update_size(sizeName, false);
+	update_stroke(strokeName);
+	update_reg(regName, true);
+}
+
+function display_date(date) {
+	var s = date.toString();
+	d3.select("#date_display").html(s.substring(0, s.length-14));
+	//d3.select("#date_display").html("" + (date.getMonth()+1) + "/" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes());
+}
+
+function jitter(v1, v2, amount) {
+	var seed = 1000 * v1 + v2;
+	var x = Math.sin(seed) * 10000;
+    return (x - Math.floor(x)) * 2 * amount - amount;
+}
+
+    </script>
+  </body>
+</html>
