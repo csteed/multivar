@@ -150,18 +150,33 @@ body { height: 100%;
   			</div>
   		</div>
   		<div class = "select_box">
-  			Size: <br/>
-  			<select id = "size_select" onchange = "update_select(sizeSelect, update_size)"></select>
+  			Height: <br/>
+  			<select id = "height_select" onchange = "update_select(heightSelect, update_height)"></select>
   			<div class = "legend_box">
-	  			<div class = "domain_box" id = "size_lbnd"></div>
-	  			<svg class = "scale_svg" id = "size_svg">
+	  			<div class = "domain_box" id = "height_lbnd"></div>
+	  			<svg class = "scale_svg" id = "height_svg">
 	  				<rect x = 9% y = 40% width = 2% height = 20% fill = "black"></rect>
 	  				<rect x = 28.25% y = 32.5% width = 3.5% height = 35% fill = "black"></rect>
 	  				<rect x = 47.5% y = 25% width = 5% height = 50% fill = "black"></rect>
 	  				<rect x = 66.75% y = 17.5% width = 6.5% height = 65% fill = "black"></rect>
 	  				<rect x = 86% y = 10% width = 8% height = 80% fill = "black"></rect>
 	  			</svg>
-	  			<div class = "domain_box" id = "size_ubnd"></div>
+	  			<div class = "domain_box" id = "height_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Width: <br/>
+  			<select id = "width_select" onchange = "update_select(widthSelect, update_width)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "width_lbnd"></div>
+	  			<svg class = "scale_svg" id = "width_svg">
+	  				<rect x = 9% y = 40% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 28.25% y = 32.5% width = 3.5% height = 35% fill = "black"></rect>
+	  				<rect x = 47.5% y = 25% width = 5% height = 50% fill = "black"></rect>
+	  				<rect x = 66.75% y = 17.5% width = 6.5% height = 65% fill = "black"></rect>
+	  				<rect x = 86% y = 10% width = 8% height = 80% fill = "black"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "width_ubnd"></div>
   			</div>
   		</div>
   		<div class = "select_box">
@@ -196,8 +211,8 @@ body { height: 100%;
     <script type="text/javascript">
     
 //different for each mode!
-var names, colorScl, orientScl, sizeScl, strokeScl, regScl, 
-colorName, orientName, sizeName, strokeName, regName,
+var names, colorScl, orientScl, widthScl, heightScl, strokeScl, regScl, 
+colorName, orientName, widthName, heightName, strokeName, regName,
 init_date_select, date_to_fname, drawData, getNearestValue, g, projection, init_map;
 
 var DEFAULT_W, DEFAULT_H, DEFAULT_REG;
@@ -338,15 +353,16 @@ var colorSelect = document.getElementById("color_select");
 init_select(colorSelect, 0);
 var orientSelect = document.getElementById("orient_select");
 init_select(orientSelect, 1);
-var sizeSelect = document.getElementById("size_select");
-init_select(sizeSelect, 2);
+var heightSelect = document.getElementById("height_select");
+init_select(heightSelect, 2);
+var widthSelect = document.getElementById("width_select");
+init_select(widthSelect, 3);
 var strokeSelect = document.getElementById("stroke_select");
-init_select(strokeSelect, 3);
+init_select(strokeSelect, 4);
 var regSelect = document.getElementById("reg_select");
-init_select(regSelect, 4);
+init_select(regSelect, 5);
 
 var dateSelect = document.getElementById("date_select");
-
 init_date_select();
 
 init_map();
@@ -355,21 +371,24 @@ init_map();
 function init_CLM() {
 	names = CLMnames;
 	
-	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"/*"rgb(37, 52, 148)", "rgb(44, 127, 184)","rgb(161, 218, 180)", "rgb(255, 255, 204)"*/]).clamp("true");
+	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"]).clamp("true");
 	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
-	sizeScl = d3.scale.linear().range([0.5, 2.0]).clamp("true");
-	strokeScl = d3.scale.linear().range([0, 1]).clamp("true");//3
-	regScl = d3.scale.linear().range([0, 2]).clamp("true");//8
+	heightScl = d3.scale.linear().range([1.5, 5]).clamp("true");
+	widthScl = d3.scale.linear().range([0.5, 1.25]).clamp("true");
+	strokeScl = d3.scale.linear().range([0.05, 1]).clamp("true");//3
+	regScl = d3.scale.linear().range([0.2, 3]).clamp("true");//8
 
-	DEFAULT_W = 1; //2
+	DEFAULT_W = 0.75; //2
 	DEFAULT_H = 2; //4
+	DEFAULT_STROKE = 0.1;
 	DEFAULT_REG = 0.4;
 	
 	colorName = "AR";//"Temperature (F)";
 	orientName = "BTRAN";//"Precipitation (in)";
-	sizeName = "FSA";//"Rel. Humidity (%)";
-	strokeName = "FSH";//"Wind Speed (kts)";
-	regName = "GPP";//"Convective Outlook (severity)";
+	heightName = "FSA";//"Rel. Humidity (%)";
+	widthName = "FSH";//"Wind Speed (kts)";
+	strokeName = "GPP";//"Convective Outlook (severity)";
+	regName = "GR";
 	
 	init_date_select = CLMinit_date_select;
 	date_to_fname = CLMdate_to_fname;
@@ -540,18 +559,18 @@ function init_rects(data) {
 		display_info("Lat: " + d["Lat"].toPrecision(5) + "<br/>Lng: " + d["Lng"].toPrecision(5) 
 		+ "<br/>" + colorName + ": " + format(colorName, d)
 		+ "<br/>" + orientName + ": " + format(orientName, d)
-		+ "<br/>" + sizeName + ": " + format(sizeName, d)
+		+ "<br/>" + heightName + ": " + format(heightName, d)
+		+ "<br/>" + widthName + ": " + format(widthName, d)
 		+ "<br/>" + strokeName + ": " + format(strokeName, d)
 		+ "<br/>" + regName + ": " + format(regName, d));
 	});
 	
 	update_color(colorName);
 	update_orient(orientName, false);
-	update_size(sizeName, false);
+	update_height(heightName, false);
+	update_width(widthName, false);
 	update_stroke(strokeName);
 	update_reg(regName, true);
-	
-	display_date(curDate);
 }
 
 function format(name, d) {
@@ -602,24 +621,42 @@ function update_orient(name, refresh) {
 	d3.select("#orient_ubnd").html(box_num_format(names[orientName].bounds[1]));
 }
 
-function update_size(name, refresh) {
-	sizeName = name;
-	sizeScl.domain(names[sizeName].bounds);
+function update_height(name, refresh) {
+	heightName = name;
+	heightScl.domain(names[heightName].bounds);
 	
 	if(refresh) {
 		update_path();
 	}
 	
-	d3.select("#size_lbnd").html(box_num_format(names[sizeName].bounds[0]));
-	d3.select("#size_ubnd").html(box_num_format(names[sizeName].bounds[1]));
+	d3.select("#height_lbnd").html(box_num_format(names[heightName].bounds[0]));
+	d3.select("#height_ubnd").html(box_num_format(names[heightName].bounds[1]));
+}
+
+function update_width(name, refresh) {
+	widthName = name;
+	widthScl.domain(names[widthName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#width_lbnd").html(box_num_format(names[widthName].bounds[0]));
+	d3.select("#width_ubnd").html(box_num_format(names[widthName].bounds[1]));
 }
 
 function update_path() {
 	d3.selectAll(".dataRect").attr("d", function(d) {
-		var s = getNearestValue(d, sizeName);
-		var size = sizeScl(s);
-		if(s == undefined) {
-			size = 1;
+		var h = getNearestValue(d, heightName);
+		var height = heightScl(h);
+		if(h == undefined) {
+			height = DEFAULT_H;
+		}
+		
+		var w = getNearestValue(d, widthName);
+		var width = widthScl(w);
+		if(w == undefined) {
+			width = DEFAULT_W;
 		}
 		
 		var t = getNearestValue(d, orientName);
@@ -634,7 +671,7 @@ function update_path() {
 			reg = DEFAULT_REG;
 		}
 		
-		return rotate_rect(d.Lat, d.Lng, DEFAULT_W*size, DEFAULT_H*size, theta, reg);
+		return rotate_rect(d.Lat, d.Lng, width, height, theta, reg);
 	});
 }
 
@@ -645,7 +682,7 @@ function update_stroke(name) {
 	d3.selectAll(".dataRect").attr("stroke-width", function(d) {
 		var s = getNearestValue(d, strokeName);
 		if(s == undefined) {
-			return 0;
+			return DEFAULT_STROKE;
 		}
 		return strokeScl(s);
 	});
