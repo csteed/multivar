@@ -25,7 +25,7 @@ body { height: 100%;
 }
 
 #info_box {
-	height: 150px;
+	height: 180px;
 	width: 100%;
 	background-color: white;
 }
@@ -204,6 +204,26 @@ body { height: 100%;
 	  			<div class = "domain_box" id = "reg_ubnd"></div>
   			</div>
   		</div>
+  		<div class = "select_box">
+  			Shape: <br/>
+  			<select id = "shape_select" onchange = "update_select(shapeSelect, update_shape)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "shape_lbnd"></div>
+	  			<svg class = "scale_svg" id = "shape_svg">
+	  			</svg>
+	  			<div class = "domain_box" id = "shape_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Opacity: <br/>
+  			<select id = "opacity_select" onchange = "update_select(opacitySelect, update_opacity)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "opacity_lbnd"></div>
+	  			<svg class = "scale_svg" id = "opacity_svg">
+	  			</svg>
+	  			<div class = "domain_box" id = "opacity_ubnd"></div>
+  			</div>
+  		</div>
   	</div>
   	
     <script type="text/javascript" src="d3.v3.min.js"></script>
@@ -211,11 +231,11 @@ body { height: 100%;
     <script type="text/javascript">
     
 //different for each mode!
-var names, colorScl, orientScl, widthScl, heightScl, strokeScl, regScl, 
-colorName, orientName, widthName, heightName, strokeName, regName,
+var names, colorScl, orientScl, widthScl, heightScl, strokeScl, regScl, shapeScl, opacityScl, 
+colorName, orientName, widthName, heightName, strokeName, regName, shapeName, opacityName,
 init_date_select, date_to_fname, drawData, getNearestValue, g, projection, init_map;
 
-var DEFAULT_W, DEFAULT_H, DEFAULT_REG;
+var DEFAULT_W, DEFAULT_H, DEFAULT_REG, DEFAULT_STROKE, DEFAULT_SHAPE;
 
 
     
@@ -361,6 +381,10 @@ var strokeSelect = document.getElementById("stroke_select");
 init_select(strokeSelect, 4);
 var regSelect = document.getElementById("reg_select");
 init_select(regSelect, 5);
+var shapeSelect = document.getElementById("shape_select");
+init_select(shapeSelect, 6);
+var opacitySelect = document.getElementById("opacity_select");
+init_select(opacitySelect, 7);
 
 var dateSelect = document.getElementById("date_select");
 init_date_select();
@@ -377,11 +401,14 @@ function init_CLM() {
 	widthScl = d3.scale.linear().range([0.5, 1.25]).clamp("true");
 	strokeScl = d3.scale.linear().range([0.05, 1]).clamp("true");//3
 	regScl = d3.scale.linear().range([0.2, 3]).clamp("true");//8
+	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
+	opacityScl = d3.scale.linear().range([0.5, 1]).clamp("true");
 
 	DEFAULT_W = 0.75; //2
 	DEFAULT_H = 2; //4
 	DEFAULT_STROKE = 0.1;
 	DEFAULT_REG = 0.4;
+	DEFAULT_SHAPE = 1;
 	
 	colorName = "AR";//"Temperature (F)";
 	orientName = "BTRAN";//"Precipitation (in)";
@@ -389,6 +416,8 @@ function init_CLM() {
 	widthName = "FSH";//"Wind Speed (kts)";
 	strokeName = "GPP";//"Convective Outlook (severity)";
 	regName = "GR";
+	shapeName = "HTOP";
+	opacityName = "LEAFC";
 	
 	init_date_select = CLMinit_date_select;
 	date_to_fname = CLMdate_to_fname;
@@ -553,7 +582,6 @@ function init_rects(data) {
 	.enter()
 	.append("path")
 	.attr("class", "dataRect")
-	.attr("opacity", 0.9)
 	.attr("stroke", "black")
 	.on("click", function(d) {
 		display_info("Lat: " + d["Lat"].toPrecision(5) + "<br/>Lng: " + d["Lng"].toPrecision(5) 
@@ -562,7 +590,8 @@ function init_rects(data) {
 		+ "<br/>" + heightName + ": " + format(heightName, d)
 		+ "<br/>" + widthName + ": " + format(widthName, d)
 		+ "<br/>" + strokeName + ": " + format(strokeName, d)
-		+ "<br/>" + regName + ": " + format(regName, d));
+		+ "<br/>" + regName + ": " + format(regName, d)
+		+ "<br/>" + shapeName + ": " + format(shapeName, d));
 	});
 	
 	update_color(colorName);
@@ -570,7 +599,9 @@ function init_rects(data) {
 	update_height(heightName, false);
 	update_width(widthName, false);
 	update_stroke(strokeName);
-	update_reg(regName, true);
+	update_reg(regName, false);
+	update_shape(shapeName, true);
+	update_opacity(opacityName);
 }
 
 function format(name, d) {
@@ -645,6 +676,18 @@ function update_width(name, refresh) {
 	d3.select("#width_ubnd").html(box_num_format(names[widthName].bounds[1]));
 }
 
+function update_shape(name, refresh) {
+	shapeName = name;
+	shapeScl.domain(names[shapeName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#shape_lbnd").html(box_num_format(names[shapeName].bounds[0]));
+	d3.select("#shape_ubnd").html(box_num_format(names[shapeName].bounds[1]));
+}
+
 function update_path() {
 	d3.selectAll(".dataRect").attr("d", function(d) {
 		var h = getNearestValue(d, heightName);
@@ -671,7 +714,13 @@ function update_path() {
 			reg = DEFAULT_REG;
 		}
 		
-		return rotate_rect(d.Lat, d.Lng, width, height, theta, reg);
+		var s = getNearestValue(d, shapeName);
+		var shape = shapeScl(s);
+		if(s == undefined) {
+			shape = DEFAULT_SHAPE;
+		}
+		
+		return rotate_rect(d.Lat, d.Lng, width, height, theta, reg, shape);
 	});
 }
 
@@ -703,6 +752,22 @@ function update_reg(name, refresh) {
 	d3.select("#reg_ubnd").html(box_num_format(names[regName].bounds[1]));
 }
 
+function update_opacity(name) {
+	opacityName = name;
+	opacityScl.domain(names[opacityName].bounds);
+	
+	d3.selectAll(".dataRect").attr("opacity", function(d) {
+		var x = getNearestValue(d, opacityName);
+		if(x == undefined) {
+			return 0.9;
+		}
+		return opacityScl(x);
+	});
+	
+	d3.select("#opacity_lbnd").html(box_num_format(names[opacityName].bounds[0]));
+	d3.select("#opacity_ubnd").html(box_num_format(names[opacityName].bounds[1]));
+}
+
 function NDFDgetNearestValue(point, name, date) {
 	var d = new Date();
 	var key = " " + names[name].fName + year + format_date(d);
@@ -728,18 +793,37 @@ function CLMgetNearestValue(point, name) {
 
 /*returns a path string.
  * theta in radians*/
-function rotate_rect (lat, lng, w, h, theta, reg) {
+function rotate_rect (lat, lng, w, h, theta, reg, shape) {
 	var cx = projection([lng, lat])[0] + jitter(lng, lat, reg);
 	var cy = projection([lng, lat])[1] + jitter(lat, lng, reg);
-	var x0 = cx + rotateX(w, h, theta);
-	var y0 = cy + rotateY(w, h, theta);
-	var x1 = cx + rotateX(-w, h, theta);
-	var y1 = cy + rotateY(-w, h, theta);
-	var x2 = cx + rotateX(-w, -h, theta);
-	var y2 = cy + rotateY(-w, -h, theta);
-	var x3 = cx + rotateX(w, -h, theta);
-	var y3 = cy + rotateY(w, -h, theta);
-	return "M " + x0 + " " + y0 + " L " + x1 + " " + y1 + " L " + x2 + " " + y2 + " L " + x3 + " " + y3 + " L " + x0 + " " + y0;
+	var w1 = shape * w;
+	var h1 = shape * h;
+	
+	var x0 = cx + rotateX(0, h, theta);
+	var y0 = cy + rotateY(0, h, theta);
+	
+	var x1 = cx + rotateX(w1, h1, theta);
+	var y1 = cy + rotateY(w1, h1, theta);
+	
+	var x2 = cx + rotateX(w, 0, theta);
+	var y2 = cy + rotateY(w, 0, theta);
+	
+	var x3 = cx + rotateX(w1, -h1, theta);
+	var y3 = cy + rotateY(w1, -h1, theta);
+	
+	var x4 = cx + rotateX(0, -h, theta);
+	var y4 = cy + rotateY(0, -h, theta);
+	
+	var x5 = cx + rotateX(-w1, -h1, theta);
+	var y5 = cy + rotateY(-w1, -h1, theta);
+	
+	var x6 = cx + rotateX(-w, 0, theta);
+	var y6 = cy + rotateY(-w, 0, theta);
+	
+	var x7 = cx + rotateX(-w1, h1, theta);
+	var y7 = cy + rotateY(-w1, h1, theta);
+	return "M " + x0 + " " + y0 + " L " + x1 + " " + y1 + " L " + x2 + " " + y2 + " L " + x3 + " " + y3 + " L " + x4 + " " + y4
+		+ " L " + x5 + " " + y5 + " L " + x6 + " " + y6 + " L " + x7 + " " + y7 + " L " + x0 + " " + y0;
 }
 
 function rotateX(x, y, theta) {
