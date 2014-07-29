@@ -256,7 +256,7 @@ body { height: 100%;
     <script type="text/javascript" src="topojson.v1.min.js"></script>
     
     <!--IMPORTANT: COMMENT OUT THIS LINE FOR CLM MODE!!!!-->
-    <!--script type="text/javascript" src="d3.geo.js"></script-->
+    <script type="text/javascript" src="d3.geo.js"></script>
     
     
     <script type="text/javascript">
@@ -393,6 +393,10 @@ var NDFDnames = {
 	"Prob. Extreme Wind": {
 		fName: "XtrmWindProb",
 		bounds: [0, 100]
+	},
+	"": {
+		fName: "asdfjkl;",
+		bounds: [0, 1]
 	}
 };   
 
@@ -495,8 +499,8 @@ var NUM_COLORS = 3;
 
 
 //==========================================================CHANGE THE MODE HERE!!======================================================================
-init_CLM();
-//init_NDFD();
+//init_CLM();
+init_NDFD();
 //======================================REMEMBER TO COMMENT OUT <script src=d3.geo.js> FOR CLM MODE!!!!!================================================
 
 
