@@ -256,7 +256,7 @@ body { height: 100%;
     <script type="text/javascript" src="topojson.v1.min.js"></script>
     
     <!--IMPORTANT: COMMENT OUT THIS LINE FOR CLM MODE!!!!-->
-    <script type="text/javascript" src="d3.geo.js"></script>
+    <!--script type="text/javascript" src="d3.geo.js"></script-->
     
     
     <script type="text/javascript">
@@ -271,7 +271,7 @@ var DEFAULT_W, DEFAULT_H, DEFAULT_REG, DEFAULT_STROKE, DEFAULT_SHAPE;
 var NDFDnames = {
 	"Temperature (F)": {
 		fName: "T",
-		bounds: [0, 120]
+		bounds: [30, 110]
 	},
 	"Precipitation (in)": {
 		fName: "QPF",
@@ -295,7 +295,7 @@ var NDFDnames = {
 	},
 	"Dew Point (F)": {
 		fName: "Td",
-		bounds: [0, 100]
+		bounds: [30, 110]
 	},
 	"Cloud Cover (%)": {
 		fName: "Sky",
@@ -304,7 +304,7 @@ var NDFDnames = {
 	
 	"Apparent Temperature (F)": {
 		fName: "ApparentT",
-		bounds: [0, 120]
+		bounds: [30, 110]
 	},
 	
 	"Prob. of Hail": {
@@ -321,7 +321,7 @@ var NDFDnames = {
 	},
 	"Max Temperature (F)": {
 		fName: "MaxT",
-		bounds: [0, 120]
+		bounds: [30, 110]
 	},
 	"Min Rel. Humidity (%)": {
 		fName: "MinRH",
@@ -329,7 +329,7 @@ var NDFDnames = {
 	},
 	"Min Temperature (F)": {
 		fName: "MinT",
-		bounds: [0, 120]
+		bounds: [0, 100]
 	},
 	"Prob. of Precipitation": {
 		fName: "PoP12",
@@ -499,8 +499,8 @@ var NUM_COLORS = 3;
 
 
 //==========================================================CHANGE THE MODE HERE!!======================================================================
-//init_CLM();
-init_NDFD();
+init_CLM();
+//init_NDFD();
 //======================================REMEMBER TO COMMENT OUT <script src=d3.geo.js> FOR CLM MODE!!!!!================================================
 
 
@@ -537,7 +537,7 @@ function init_CLM() {
 	strokeScl = d3.scale.linear().range([0.05, 1]).clamp("true");//3
 	regScl = d3.scale.linear().range([0.2, 3]).clamp("true");//8
 	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
-	opacityScl = d3.scale.linear().range([0.2, 1]).clamp("true");
+	opacityScl = d3.scale.linear().range([0.4, 1]).clamp("true");
 
 	DEFAULT_W = 0.75; //2
 	DEFAULT_H = 2; //4
@@ -571,7 +571,7 @@ function init_NDFD() {
 	strokeScl = d3.scale.linear().range([0.05, 3]).clamp("true");//3
 	regScl = d3.scale.linear().range([0.2, 5]).clamp("true");//8
 	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
-	opacityScl = d3.scale.linear().range([0.2, 1]).clamp("true");
+	opacityScl = d3.scale.linear().range([0.4, 1]).clamp("true");
 
 	DEFAULT_W = 2; //2
 	DEFAULT_H = 4; //4
