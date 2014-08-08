@@ -267,7 +267,9 @@ colorName, orientName, widthName, heightName, strokeName, regName, shapeName, op
 init_date_select, date_to_fname, drawData, g, projection, init_map;
 
 var DEFAULT_W, DEFAULT_H, DEFAULT_REG, DEFAULT_STROKE, DEFAULT_SHAPE;
-   
+
+
+//if you change a names list, be sure to change the starting names in the corresponding init function   
 var NDFDnames = {
 	"Temperature (F)": {
 		fName: "T",
@@ -494,7 +496,7 @@ var CLMnames = {
 var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
     
 
-
+//change this if you change the color scheme
 var NUM_COLORS = 3;
 
 
@@ -526,11 +528,12 @@ init_date_select();
 
 init_map();
 
-
+//initialize variables for CLM visualization
 function init_CLM() {
 	names = CLMnames;
 	
 	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"]).clamp("true");
+	//if you change the color scheme, remember to update NUM_COLORS
 	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
 	heightScl = d3.scale.linear().range([1.5, 5]).clamp("true");
 	widthScl = d3.scale.linear().range([0.5, 1.25]).clamp("true");
@@ -545,6 +548,8 @@ function init_CLM() {
 	DEFAULT_REG = 0.4;
 	DEFAULT_SHAPE = 1;
 	
+	//these must match the starting selected variables, for now the first names in the names list, in order
+	colorName = "Temperature (F)";
 	colorName = "AR";
 	orientName = "BTRAN";
 	heightName = "FSA";;
@@ -561,10 +566,12 @@ function init_CLM() {
 	init_map = CLMinit_map;
 }
 
+//initialize variables for NDFD visualization
 function init_NDFD() {
 	names = NDFDnames;
 	
 	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"]).clamp("true");
+	//if you change the color scheme, remember to update NUM_COLORS
 	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
 	heightScl = d3.scale.linear().range([3, 8]).clamp("true");
 	widthScl = d3.scale.linear().range([1, 3]).clamp("true");
@@ -573,17 +580,18 @@ function init_NDFD() {
 	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
 	opacityScl = d3.scale.linear().range([0.4, 1]).clamp("true");
 
-	DEFAULT_W = 2; //2
-	DEFAULT_H = 4; //4
+	DEFAULT_W = 2;
+	DEFAULT_H = 4;
 	DEFAULT_STROKE = 0.1;
 	DEFAULT_REG = 1;
 	DEFAULT_SHAPE = 1;
 	
+	//these must match the starting selected variables, for now the first names in the names list, in order
 	colorName = "Temperature (F)";
-	orientName = "Precipitation (in)";//"Precipitation (in)";
-	heightName = "Wave Height (ft)";//"Rel. Humidity (%)";
-	widthName = "Relative Humidity (%)";//"Wind Speed (kts)";
-	strokeName = "Wind Speed (kts)";//"Convective Outlook (severity)";
+	orientName = "Precipitation (in)";
+	heightName = "Wave Height (ft)";
+	widthName = "Relative Humidity (%)";
+	strokeName = "Wind Speed (kts)";
 	regName = "Convective Outlook (severity)";
 	shapeName = "Dew Point (F)";
 	opacityName = "Cloud Cover (%)";
@@ -640,35 +648,16 @@ function set_date() {
 	drawData();
 }
 
-/*function format_date(d) {
-	var n = (100000000 + (d.getMonth()+1) * 1000000 + d.getDate() * 10000 + d.getHours() * 100);
-	var s = "" + n;
-	return s.substring(1, s.length);
-}*/
-
 function CLMdate_to_fname(year, month) {
 	var s = "" + (10000 + year - 1850 + month * 0.01 + .001);
 	return s.substring(1, 8) + ".json";
 }
 
+//d is a date object
 function NDFDdate_to_fname(d) {
 	var s = "" + (100000000 + (d.getMonth()+1) * 1000000 + d.getDate() * 10000 + d.getHours() * 100);
 	return s.substring(1, s.length) + ".json";
 }
-
-/*function drawData() {
-	var filenames = [];
-	var d = new Date(startDate.getTime());
-	var path = "data/7.1.14.revised/"
-	for (var i = 0; i < NUM_TIMESTEPS; i++){
-		for(var j in names) {
-			filenames.push(path + names[j].fName + "/" + names[j].fName + format_date(d) + "_2.5_0.0_0.0reduced.csv");
-		}
-		d.setHours(d.getHours() + HOUR_INTERVAL);
-	}
-	
-	multi_csv(filenames, init_rects);
-}*/
 
 function CLMdrawData() {
 	var path = "data/CLM/"
@@ -682,56 +671,6 @@ function NDFDdrawData() {
 	d3.json(path + dateSelect.options[dateSelect.selectedIndex].value, function(error, data) {
 		init_rects(data.geo_data);
 	});
-}
-
-function multi_csv(filenames, draw) {
-	var combined = new Object();
-	var result = new Array();
-	var ready = 0;
-	var target = filenames.length;
-	
-	for(var i = 0; i < filenames.length; i++) {
-		d3.csv(filenames[i], function(data) {
-			if(data != null) {
-				var valName = Object.keys(data[0])[2];
-				var j, lat, lng;
-				for(j = 0; j < data.length; j++) {
-					lat = data[j].Lat;
-					lng = data[j].Lng;
-					if(combined[lat] == undefined) {
-						combined[lat] = new Object();
-					}
-					if(combined[lat][lng] == undefined) {
-						combined[lat][lng] = new Object();
-					}
-					combined[lat][lng][valName] = parseFloat(data[j][valName]);
-				}
-				
-				ready += 1;
-			}
-			else {
-				target -= 1;
-			}
-			if(ready == target) {
-				finalize();
-			}
-		});
-	}
-	
-	function finalize() {
-		for(var lat in combined) {
-			for(var lng in combined[lat]) {
-				result.push({
-					Lat: parseFloat(lat),
-					Lng: parseFloat(lng),
-					Values: combined[lat][lng]
-				});
-			}
-		}
-		
-		draw(result);
-	}
-	
 }
 
 function CLMinit_map() {
@@ -824,6 +763,7 @@ function init_rects(data) {
 		+ "<br/>" + opacityName + ": " + format(opacityName, d));
 	});
 	
+	//for update methods involving drawing a path, the last "refresh" (second parameter) should be true; the rest should be false.
 	update_color(colorName);
 	update_orient(orientName, false);
 	update_height(heightName, false);
@@ -841,7 +781,7 @@ function format(name, d) {
 }
 
 function box_num_format(n) {
-	if(n >= 1000 || (n < 0.001 && n > 0)) {
+	if(Math.abs(n) >= 1000 || (Math.abs(n) < 0.001 && n != 0)) {
 		return n.toExponential(0);
 	}
 	return n;
@@ -870,6 +810,7 @@ function update_color(name) {
 	d3.select("#color_ubnd").html(box_num_format(names[colorName].bounds[1]));
 }
 
+//refresh determines whether update_path is called. Should be true for the last applicable attribute updated at one time
 function update_orient(name, refresh) {
 	orientName = name;
 	orientScl.domain(names[orientName].bounds);
@@ -918,6 +859,8 @@ function update_shape(name, refresh) {
 	d3.select("#shape_ubnd").html(box_num_format(names[shapeName].bounds[1]));
 }
 
+
+//to be called by any update function that affects the shape
 function update_path() {
 	d3.selectAll(".dataRect").attr("d", function(d) {
 		var h = getNearestValue(d, heightName);
@@ -1002,7 +945,7 @@ function getNearestValue(point, name) {
 	return point[names[name].fName];
 }
 
-/*returns a path string.
+/*returns a path string representing the oriented shape.
  * theta in radians*/
 function rotate_rect (lat, lng, w, h, theta, reg, shape) {
 	var cx = projection([lng, lat])[0] + jitter(lng, lat, reg);
@@ -1049,12 +992,7 @@ function display_info(message) {
 	d3.select("#info_box").html(message);
 }
 
-function display_date(date) {
-	var s = date.toString();
-	d3.select("#date_display").html(s.substring(0, s.length-14));
-	//d3.select("#date_display").html("" + (date.getMonth()+1) + "/" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes());
-}
-
+//seeded random displacement for regularity variation
 function jitter(v1, v2, amount) {
 	var seed = 1000 * v1 + v2;
 	var x = Math.sin(seed) * 10000;
