@@ -1,98 +1,1004 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640" />
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+html { height: 100% }
+body { height: 100%; 
+	margin: 0; 
+	padding: 0;
+}
 
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
 
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
-    <title>Multivar by csteed</title>
+#map_svg {
+	height: 100%;
+	width: 85%;
+	float: left;
+}
+
+#right_panel {
+	height: 100%;
+	width: 15%;
+	background-color: #eee;
+	float: left;
+}
+
+#info_box {
+	height: 180px;
+	width: 100%;
+	background-color: white;
+}
+
+.select_box {
+	height: 70px;
+	width: 100%
+}
+
+.legend_box {
+	height: 30px;
+	width: 100%;
+	background-color: white;
+}
+
+.domain_box {
+	height: 100%;
+	width: 15%;
+	float: left;
+	text-align: center;
+}
+
+.scale_svg {
+	height: 30px;
+	width: 70%;
+	float: left;
+}
+
+#date_box {
+	height: 20px;
+	width: 100%;
+}
+
+.date_button {
+	width: 10%;
+	height: 100%;
+	float: left;
+}
+
+#date_select {
+	width: 100%;
+	float: left;
+}
+
+#date_display {
+	height: 100%;
+	width: 80%;
+	float: left;
+}
+
+.state {
+  fill: #fff;
+  stroke: #000;
+}
+
+.land {
+  fill: none;
+  stroke: #000;
+}
+
+.boundary {
+  fill: none;
+  stroke: #000;
+}
+
+
+    </style>
   </head>
-
   <body>
-    <a id="forkme_banner" href="https://github.com/csteed/multivar">View on GitHub</a>
-    <div class="shell">
-
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Multivar</h1>
-            <h2>Multivariate Data Visualization</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
-
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/csteed/multivar/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/csteed/multivar/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
-
-
-      <span class="banner-fix"></span>
-
-
-      <section id="main_content">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/csteed">csteed</a> can be found on <a href="https://github.com/csteed/multivar">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
-    </div>
-
+  	<svg id = "map_svg"></svg>
+  	<div id = "right_panel">
+  		<div id = "info_box"></div>
+  		<div id = "date_box">
+  			<select id = "date_select" onchange = "set_date()"></select>
+  		</div>
+  		<div class = "select_box">
+  			Color: <br/>
+  			<select id = "color_select" onchange = "update_select(colorSelect, update_color)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "color_lbnd"></div>
+	  			<svg class = "scale_svg" id = "color_svg">
+	  				<rect x = 0% y = 10% width = 20% height = 80% fill = "rgb(255, 255, 178)"></rect>
+	  				<rect x = 20% y = 10% width = 20% height = 80% fill = "rgb(254, 198, 104)"></rect>
+	  				<rect x = 40% y = 10% width = 20% height = 80% fill = "rgb(253, 141, 60)"></rect>
+	  				<rect x = 60% y = 10% width = 20% height = 80% fill = "rgb(221, 70, 49)"></rect>
+	  				<rect x = 80% y = 10% width = 20% height = 80% fill = "rgb(189,0,38)"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "color_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Orientation: <br/>
+  			<select id = "orient_select" onchange = "update_select(orientSelect, update_orient)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "orient_lbnd"></div>
+	  			<svg class = "scale_svg" id = "orient_svg">
+	  				<svg x = 10% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black"></rect>
+	  				</svg>
+	  				<svg x = 30% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(22.5)"></rect>
+	  				</svg>
+	  				<svg x = 50% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(45)"></rect>
+	  				</svg>
+	  				<svg x = 70% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(67.5)"></rect>
+	  				</svg>
+	  				<svg x = 90% y = 50% width = 8% height = 70% overflow = "visible">
+	  					<rect x = -50% y = -50% width = 100% height = 100% fill = "black" transform = "rotate(90)"></rect>
+	  				</svg>
+	  			</svg>
+	  			<div class = "domain_box" id = "orient_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Height: <br/>
+  			<select id = "height_select" onchange = "update_select(heightSelect, update_height)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "height_lbnd"></div>
+	  			<svg class = "scale_svg" id = "height_svg">
+	  				<rect x = 8% y = 40% width = 4% height = 20% fill = "black"></rect>
+	  				<rect x = 28% y = 30% width = 4% height = 40% fill = "black"></rect>
+	  				<rect x = 48% y = 20% width = 4% height = 60% fill = "black"></rect>
+	  				<rect x = 68% y = 10% width = 4% height = 80% fill = "black"></rect>
+	  				<rect x = 88% y = 0% width = 4% height = 100% fill = "black"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "height_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Width: <br/>
+  			<select id = "width_select" onchange = "update_select(widthSelect, update_width)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "width_lbnd"></div>
+	  			<svg class = "scale_svg" id = "width_svg">
+	  				<rect x = 8% y = 15% width = 4% height = 70% fill = "black"></rect>
+	  				<rect x = 27.75% y = 15% width = 5.5% height = 70% fill = "black"></rect>
+	  				<rect x = 46.5% y = 15% width = 7% height = 70% fill = "black"></rect>
+	  				<rect x = 65.75% y = 15% width = 8.5% height = 70% fill = "black"></rect>
+	  				<rect x = 85% y = 15% width = 10% height = 70% fill = "black"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "width_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Stroke: <br/>
+  			<select id = "stroke_select" onchange = "update_select(strokeSelect, update_stroke)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "stroke_lbnd"></div>
+	  			<svg class = "scale_svg" id = "stroke_svg">
+	  				<rect x = 6% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 0.5></rect>
+	  				<rect x = 26% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 1.1></rect>
+	  				<rect x = 46% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 1.7></rect>
+	  				<rect x = 66% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 2.3></rect>
+	  				<rect x = 86% y = 15% width = 8% height = 70% fill = "#ddd" stroke = "black" stroke-width = 3.0></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "stroke_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Regularity: <br/>
+  			<select id = "reg_select" onchange = "update_select(regSelect, update_reg)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "reg_lbnd"></div>
+	  			<svg class = "scale_svg" id = "reg_svg">
+	  				<rect x = 10% y = 20% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 10% y = 60% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 21% y = 20% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 20% y = 60% width = 2% height = 20% fill = "black"></rect>
+	  				
+	  				<rect x = 45% y = 25% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 42% y = 60% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 56% y = 15% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 55% y = 65% width = 2% height = 20% fill = "black"></rect>
+	  				
+	  				<rect x = 72% y = 15% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 80% y = 50% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 95% y = 0% width = 2% height = 20% fill = "black"></rect>
+	  				<rect x = 90% y = 70% width = 2% height = 20% fill = "black"></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "reg_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Shape: <br/>
+  			<select id = "shape_select" onchange = "update_select(shapeSelect, update_shape)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "shape_lbnd"></div>
+	  			<svg class = "scale_svg" id = "shape_svg">
+	  				<svg x = 6% y = 15% width = 8% height = 70% viewbox = "0 0 50 100">
+	  					<polygon points = "0,50 18.75,37.5 25,0 31.25,37.5 50,50 31.25,62.5 25,100 18.75,62.5" fill = "black"></polygon>
+	  				</svg>
+	  				<svg x = 26% y = 15% width = 8% height = 70% viewbox = "0 0 50 100">
+	  					<polygon points = "0,50 14.07,28.13 25,0 35.93,28.13 50,50 35.93,71.87 25,100 14.01,71.87" fill = "black"></polygon>
+	  				</svg>
+	  				<svg x = 46% y = 15% width = 8% height = 70% viewbox = "0 0 50 100">
+	  					<polygon points = "0,50 9.38,18.75 25,0 40.63,18.75 50,50 40.63,81.25 25,100 9.38,81.25" fill = "black"></polygon>
+	  				</svg>
+	  				<svg x = 66% y = 15% width = 8% height = 70% viewbox = "0 0 50 100">
+	  					<polygon points = "0,50 4.69,9.38 25,0 45.31,9.38 50,50 45.31,90.62 25,100 4.69,90.62" fill = "black"></polygon>
+	  				</svg>
+	  				<svg x = 86% y = 15% width = 8% height = 70% viewbox = "0 0 50 100">
+	  					<polygon points = "0,0 0,100 50,100 50,0" fill = "black"></polygon>
+	  				</svg>
+	  			</svg>
+	  			<div class = "domain_box" id = "shape_ubnd"></div>
+  			</div>
+  		</div>
+  		<div class = "select_box">
+  			Opacity: <br/>
+  			<select id = "opacity_select" onchange = "update_select(opacitySelect, update_opacity)"></select>
+  			<div class = "legend_box">
+	  			<div class = "domain_box" id = "opacity_lbnd"></div>
+	  			<svg class = "scale_svg" id = "opacity_svg">
+	  				<rect x = 6% y = 15% width = 8% height = 70% fill = "black" opacity = 0.2></rect>
+	  				<rect x = 26% y = 15% width = 8% height = 70% fill = "black" opacity = 0.4></rect>
+	  				<rect x = 46% y = 15% width = 8% height = 70% fill = "black" opacity = 0.6></rect>
+	  				<rect x = 66% y = 15% width = 8% height = 70% fill = "black" opacity = 0.8></rect>
+	  				<rect x = 86% y = 15% width = 8% height = 70% fill = "black" opacity = 1.0></rect>
+	  			</svg>
+	  			<div class = "domain_box" id = "opacity_ubnd"></div>
+  			</div>
+  		</div>
+  	</div>
+  	
+    <script type="text/javascript" src="d3.v3.min.js"></script>
+    <script type="text/javascript" src="topojson.v1.min.js"></script>
     
+    <!--IMPORTANT: COMMENT OUT THIS LINE FOR CLM MODE!!!!-->
+    <!--script type="text/javascript" src="d3.geo.js"></script-->
+    
+    
+    <script type="text/javascript">
+    
+//different for each mode!
+var names, colorScl, orientScl, widthScl, heightScl, strokeScl, regScl, shapeScl, opacityScl, 
+colorName, orientName, widthName, heightName, strokeName, regName, shapeName, opacityName,
+init_date_select, date_to_fname, drawData, g, projection, init_map;
+
+var DEFAULT_W, DEFAULT_H, DEFAULT_REG, DEFAULT_STROKE, DEFAULT_SHAPE;
+
+
+//if you change a names list, be sure to change the starting names in the corresponding init function   
+var NDFDnames = {
+	"Temperature (F)": {
+		fName: "T",
+		bounds: [30, 110]
+	},
+	"Precipitation (in)": {
+		fName: "QPF",
+		bounds: [0, 2.5]
+	},
+	"Wave Height (ft)": {
+		fName: "WaveHeight",
+		bounds: [0, 20]
+	},
+	"Relative Humidity (%)": {
+		fName: "RH",
+		bounds: [0, 100]
+	},
+	"Wind Speed (kts)": {
+		fName: "WindSpd",
+		bounds: [0, 50]
+	},
+	"Convective Outlook (severity)": {
+		fName: "ConvOutlook",
+		bounds: [0,8]
+	},
+	"Dew Point (F)": {
+		fName: "Td",
+		bounds: [30, 110]
+	},
+	"Cloud Cover (%)": {
+		fName: "Sky",
+		bounds: [0, 100]
+	},
+	
+	"Apparent Temperature (F)": {
+		fName: "ApparentT",
+		bounds: [30, 110]
+	},
+	
+	"Prob. of Hail": {
+		fName: "HailProb",
+		bounds: [0, 100]
+	},
+	"Ice Accumulation (in)": {
+		fName: "IceAccum",
+		bounds: [0, 2]
+	},
+	"Max Rel. Humidity (%)": {
+		fName: "MaxRH",
+		bounds: [0, 100]
+	},
+	"Max Temperature (F)": {
+		fName: "MaxT",
+		bounds: [30, 110]
+	},
+	"Min Rel. Humidity (%)": {
+		fName: "MinRH",
+		bounds: [0, 100]
+	},
+	"Min Temperature (F)": {
+		fName: "MinT",
+		bounds: [0, 100]
+	},
+	"Prob. of Precipitation": {
+		fName: "PoP12",
+		bounds: [0, 100]
+	},
+	"Prob. Dry Lightning": {
+		fName: "ProbDryLightning24",
+		bounds: [0, 100]
+	},
+	"Prob Fire Weather": {
+		fName: "ProbFireWx24",
+		bounds: [0, 100]
+	},
+	"Prob Wind Speed >34kts": {
+		fName: "ProbWindSpd34i",
+		bounds: [0, 100]
+	},
+	"Prob Wind Speed >50kts": {
+		fName: "ProbWindSpd50i",
+		bounds: [0, 100]
+	},
+	"Prob Wind Speed >64kts": {
+		fName: "ProbWindSpd64i",
+		bounds: [0, 100]
+	},
+	
+	
+	
+	"Snow Amount (in)": {
+		fName: "SnowAmt",
+		bounds: [0, 5]
+	},
+	
+	
+	"Prob. Tornado": {
+		fName: "TornadoProb",
+		bounds: [0, 100]
+	},
+	"Total Severe TStorm Prob.": {
+		fName: "TotalSvrProb",
+		bounds: [0, 100]
+	},
+	"Total Extreme Storm Prob.": {
+		fName: "TotalXtrmProb",
+		bounds: [0, 100]
+	},
+	
+	"Wind Gust (kts)": {
+		fName: "WindGust",
+		bounds: [0, 50]
+	},
+	
+	"Prob. Extreme Hail": {
+		fName: "XtrmHailProb",
+		bounds: [0, 100]
+	},
+	"Prob. Extreme Tornado": {
+		fName: "XtrmTornProb",
+		bounds: [0, 100]
+	},
+	"Prob. Extreme Wind": {
+		fName: "XtrmWindProb",
+		bounds: [0, 100]
+	},
+	"": {
+		fName: "asdfjkl;",
+		bounds: [0, 1]
+	}
+};   
+
+var CLMnames = {
+	"AR": {
+		fName: "AR",
+		bounds: [0, 2E-4],
+	},
+	"BTRAN": {
+		fName: "BTRAN",
+		bounds: [0, 1],
+	},
+	"FSA": {
+		fName: "FSA",
+		bounds: [0, 400],
+	},
+	"FSH": {
+		fName: "FSH",
+		bounds: [-100, 200],
+	},
+	"GPP": {
+		fName: "GPP",
+		bounds: [0, 3E-4],
+	},
+	"GR": {
+		fName: "GR",
+		bounds: [0, 3E-5],
+	},
+	"HTOP": {
+		fName: "HTOP",
+		bounds: [0, 50],
+	},
+	"LEAFC": {
+		fName: "LEAFC",
+		bounds: [0, 600],
+	},
+	"LEAFC_LOSS": {
+		fName: "LEAFC_LOSS",
+		bounds: [0, 1E-4],
+	},
+	"NPP": {
+		fName: "NPP",
+		bounds: [0, -3E-5],
+	},
+	"QBOT": {
+		fName: "QBOT",
+		bounds: [0, 0.05],
+	},
+	"QVEGT": {
+		fName: "QVEGT",
+		bounds: [0, 5E-5],
+	},
+	"RAIN": {
+		fName: "RAIN",
+		bounds: [0, 2E-4],
+	},
+	"TG": {
+		fName: "TG",
+		bounds: [200, 400],
+	},
+	"TLAI": {
+		fName: "TLAI",
+		bounds: [0, 20],
+	},
+	"TOTVEGC": {
+		fName: "TOTVEGC",
+		bounds: [0, 60000],
+	},
+	"TSA": {
+		fName: "TSA",
+		bounds: [200, 350],
+	},
+	"TV": {
+		fName: "TV",
+		bounds: [200, 400],
+	},
+	"U10": {
+		fName: "U10",
+		bounds: [0, 6],
+	},
+	"WIND": {
+		fName: "WIND",
+		bounds: [0, 10]
+	},
+	"WOODC": {
+		fName: "WOODC",
+		bounds: [0, 60000],
+	},
+	"": {
+		fName: "asdfjkl;",
+		bounds: [0, 1]
+	}
+}
+
+var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    
+
+//change this if you change the color scheme
+var NUM_COLORS = 3;
+
+
+//==========================================================CHANGE THE MODE HERE!!======================================================================
+init_CLM();
+//init_NDFD();
+//======================================REMEMBER TO COMMENT OUT <script src=d3.geo.js> FOR CLM MODE!!!!!================================================
+
+
+var colorSelect = document.getElementById("color_select");
+init_select(colorSelect, 0);
+var orientSelect = document.getElementById("orient_select");
+init_select(orientSelect, 1);
+var heightSelect = document.getElementById("height_select");
+init_select(heightSelect, 2);
+var widthSelect = document.getElementById("width_select");
+init_select(widthSelect, 3);
+var strokeSelect = document.getElementById("stroke_select");
+init_select(strokeSelect, 4);
+var regSelect = document.getElementById("reg_select");
+init_select(regSelect, 5);
+var shapeSelect = document.getElementById("shape_select");
+init_select(shapeSelect, 6);
+var opacitySelect = document.getElementById("opacity_select");
+init_select(opacitySelect, 7);
+
+var dateSelect = document.getElementById("date_select");
+init_date_select();
+
+init_map();
+
+//initialize variables for CLM visualization
+function init_CLM() {
+	names = CLMnames;
+	
+	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"]).clamp("true");
+	//if you change the color scheme, remember to update NUM_COLORS
+	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
+	heightScl = d3.scale.linear().range([1.5, 5]).clamp("true");
+	widthScl = d3.scale.linear().range([0.5, 1.25]).clamp("true");
+	strokeScl = d3.scale.linear().range([0.05, 1]).clamp("true");//3
+	regScl = d3.scale.linear().range([0.2, 3]).clamp("true");//8
+	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
+	opacityScl = d3.scale.linear().range([0.4, 1]).clamp("true");
+
+	DEFAULT_W = 0.75; //2
+	DEFAULT_H = 2; //4
+	DEFAULT_STROKE = 0.1;
+	DEFAULT_REG = 0.4;
+	DEFAULT_SHAPE = 1;
+	
+	//these must match the starting selected variables, for now the first names in the names list, in order
+	colorName = "Temperature (F)";
+	colorName = "AR";
+	orientName = "BTRAN";
+	heightName = "FSA";;
+	widthName = "FSH";
+	strokeName = "GPP";
+	regName = "GR";
+	shapeName = "HTOP";
+	opacityName = "LEAFC";
+	
+	init_date_select = CLMinit_date_select;
+	date_to_fname = CLMdate_to_fname;
+	drawData = CLMdrawData;
+	
+	init_map = CLMinit_map;
+}
+
+//initialize variables for NDFD visualization
+function init_NDFD() {
+	names = NDFDnames;
+	
+	colorScl = d3.scale.linear().range(["rgb(255, 255, 178)", "rgb(253, 141, 60)", "rgb(189,0,38)"]).clamp("true");
+	//if you change the color scheme, remember to update NUM_COLORS
+	orientScl = d3.scale.linear().range([0, Math.PI/2]).clamp("true");
+	heightScl = d3.scale.linear().range([3, 8]).clamp("true");
+	widthScl = d3.scale.linear().range([1, 3]).clamp("true");
+	strokeScl = d3.scale.linear().range([0.05, 3]).clamp("true");//3
+	regScl = d3.scale.linear().range([0.2, 5]).clamp("true");//8
+	shapeScl = d3.scale.linear().range([0.25, 1]).clamp("true");
+	opacityScl = d3.scale.linear().range([0.4, 1]).clamp("true");
+
+	DEFAULT_W = 2;
+	DEFAULT_H = 4;
+	DEFAULT_STROKE = 0.1;
+	DEFAULT_REG = 1;
+	DEFAULT_SHAPE = 1;
+	
+	//these must match the starting selected variables, for now the first names in the names list, in order
+	colorName = "Temperature (F)";
+	orientName = "Precipitation (in)";
+	heightName = "Wave Height (ft)";
+	widthName = "Relative Humidity (%)";
+	strokeName = "Wind Speed (kts)";
+	regName = "Convective Outlook (severity)";
+	shapeName = "Dew Point (F)";
+	opacityName = "Cloud Cover (%)";
+	
+	init_date_select = NDFDinit_date_select;
+	date_to_fname = NDFDdate_to_fname;
+	drawData = NDFDdrawData;
+	
+	init_map = NDFDinit_map;
+}
+
+function init_select(sel, startIdx) {
+	for(var name in names) {
+		var option = document.createElement("option");
+		option.value = name;
+		option.text = name;
+		sel.add(option);
+	}
+	
+	sel.selectedIndex = startIdx;
+}
+
+function update_select(sel, update) {
+	update(sel.options[sel.selectedIndex].value, true);
+}
+
+function CLMinit_date_select() {
+	for(var year = 2001; year <= 2015; year++) {
+		for(var month = 1; month <= 12; month++) {
+			var option = document.createElement("option");
+			option.value = date_to_fname(year, month);
+			option.text = monthNames[month-1] + " " + year;
+			dateSelect.add(option);
+		}
+	}
+	dateSelect.selectedIndex = 0;
+}
+
+function NDFDinit_date_select() {
+	var date = new Date(2014, 6, 1, 18, 0, 0, 0);
+	for(var i = 0; i < 19; i++) {
+		var option = document.createElement("option");
+		option.value = date_to_fname(date);
+		var s = date.toString();
+		option.text = s.substring(0, s.length-14);
+		dateSelect.add(option);
+		
+		date.setHours(date.getHours()+3);
+	}
+	dateSelect.selectedIndex = 0;
+}
+
+function set_date() {
+	drawData();
+}
+
+function CLMdate_to_fname(year, month) {
+	var s = "" + (10000 + year - 1850 + month * 0.01 + .001);
+	return s.substring(1, 8) + ".json";
+}
+
+//d is a date object
+function NDFDdate_to_fname(d) {
+	var s = "" + (100000000 + (d.getMonth()+1) * 1000000 + d.getDate() * 10000 + d.getHours() * 100);
+	return s.substring(1, s.length) + ".json";
+}
+
+function CLMdrawData() {
+	var path = "data/CLM/"
+	d3.json(path + dateSelect.options[dateSelect.selectedIndex].value, function(error, data) {
+		init_rects(data.geo_data);
+	});
+}
+
+function NDFDdrawData() {
+	var path = "data/NDFD/7.1.14/"
+	d3.json(path + dateSelect.options[dateSelect.selectedIndex].value, function(error, data) {
+		init_rects(data.geo_data);
+	});
+}
+
+function CLMinit_map() {
+	projection = d3.geo.equirectangular()
+    .scale(200)
+    .translate([650, 360]);
+
+	var path = d3.geo.path()
+    .projection(projection);
+
+	var svg = d3.select("#map_svg");
+
+	g = svg.append("svg:g");
+
+	var zoom = d3.behavior.zoom()
+    .on("zoom",function() {
+        g.attr("transform","translate("+ 
+            d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+  	});
+ 
+	svg.call(zoom);
+	
+	d3.json("world-110m.json", function(error, world) {
+	  	g.insert("path", ".graticule")
+	      .datum(topojson.feature(world, world.objects.land))
+	      .attr("class", "land")
+	      .attr("d", path);
+	
+	  	g.insert("path", ".graticule")
+	      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+	      .attr("class", "boundary")
+	      .attr("d", path);
+	      
+		drawData();
+	});
+}
+
+function NDFDinit_map() {
+	projection = d3.geo.azimuthal()
+    .mode("equidistant")
+    .origin([-98, 38])
+    .scale(1400)
+    .translate([560, 360]);
+
+	var path = d3.geo.path()
+	    .projection(projection);
+	
+	var svg = d3.select("#map_svg");
+	
+	g = svg.append("svg:g")
+	    .attr("id", "states");
+	
+	var zoom = d3.behavior.zoom()
+	    .on("zoom",function() {
+	        g.attr("transform","translate("+ 
+	            d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+	 
+	  });
+	 
+	svg.call(zoom);
+	
+	d3.json("us-states.json", function(collection) {
+	  g.selectAll("path")
+	      .data(collection.features)
+	    .enter().append("svg:path")
+	      .attr("class", "state")
+	      .attr("d", path);
+	      
+		drawData();
+	});
+}
+
+function init_rects(data) {
+	
+	g.selectAll(".dataRect")
+	.data(data)
+	.enter()
+	.append("path")
+	.attr("class", "dataRect")
+	.attr("stroke", "black")
+	.on("click", function(d) {
+		display_info("Lat: " + d["Lat"].toPrecision(5) + "<br/>Lng: " + d["Lng"].toPrecision(5) 
+		+ "<br/>" + colorName + ": " + format(colorName, d)
+		+ "<br/>" + orientName + ": " + format(orientName, d)
+		+ "<br/>" + heightName + ": " + format(heightName, d)
+		+ "<br/>" + widthName + ": " + format(widthName, d)
+		+ "<br/>" + strokeName + ": " + format(strokeName, d)
+		+ "<br/>" + regName + ": " + format(regName, d)
+		+ "<br/>" + shapeName + ": " + format(shapeName, d)
+		+ "<br/>" + opacityName + ": " + format(opacityName, d));
+	});
+	
+	//for update methods involving drawing a path, the last "refresh" (second parameter) should be true; the rest should be false.
+	update_color(colorName);
+	update_orient(orientName, false);
+	update_height(heightName, false);
+	update_width(widthName, false);
+	update_stroke(strokeName);
+	update_reg(regName, false);
+	update_shape(shapeName, true);
+	update_opacity(opacityName);
+}
+
+function format(name, d) {
+	var val = getNearestValue(d, name);
+	if(val == undefined) {return "N/A";}
+	return "" + val.toPrecision(5);
+}
+
+function box_num_format(n) {
+	if(Math.abs(n) >= 1000 || (Math.abs(n) < 0.001 && n != 0)) {
+		return n.toExponential(0);
+	}
+	return n;
+}
+
+function update_color(name) {
+	colorName = name;
+	
+	var dom = [names[colorName].bounds[0]];
+	var incr = names[colorName].bounds[1] / (NUM_COLORS-1);
+	for(var i = 0; i < NUM_COLORS-1; i++) {
+		dom.push(dom[i]+incr);
+	}
+	
+	colorScl.domain(dom);
+	
+	d3.selectAll(".dataRect").attr("fill", function(d) {
+		var c = getNearestValue(d, colorName);
+		if(c == undefined) {
+			return "#dddddd";
+		}
+		return colorScl(c);
+	});
+	
+	d3.select("#color_lbnd").html(box_num_format(names[colorName].bounds[0]));
+	d3.select("#color_ubnd").html(box_num_format(names[colorName].bounds[1]));
+}
+
+//refresh determines whether update_path is called. Should be true for the last applicable attribute updated at one time
+function update_orient(name, refresh) {
+	orientName = name;
+	orientScl.domain(names[orientName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#orient_lbnd").html(box_num_format(names[orientName].bounds[0]));
+	d3.select("#orient_ubnd").html(box_num_format(names[orientName].bounds[1]));
+}
+
+function update_height(name, refresh) {
+	heightName = name;
+	heightScl.domain(names[heightName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#height_lbnd").html(box_num_format(names[heightName].bounds[0]));
+	d3.select("#height_ubnd").html(box_num_format(names[heightName].bounds[1]));
+}
+
+function update_width(name, refresh) {
+	widthName = name;
+	widthScl.domain(names[widthName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#width_lbnd").html(box_num_format(names[widthName].bounds[0]));
+	d3.select("#width_ubnd").html(box_num_format(names[widthName].bounds[1]));
+}
+
+function update_shape(name, refresh) {
+	shapeName = name;
+	shapeScl.domain(names[shapeName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#shape_lbnd").html(box_num_format(names[shapeName].bounds[0]));
+	d3.select("#shape_ubnd").html(box_num_format(names[shapeName].bounds[1]));
+}
+
+
+//to be called by any update function that affects the shape
+function update_path() {
+	d3.selectAll(".dataRect").attr("d", function(d) {
+		var h = getNearestValue(d, heightName);
+		var height = heightScl(h);
+		if(h == undefined) {
+			height = DEFAULT_H;
+		}
+		
+		var w = getNearestValue(d, widthName);
+		var width = widthScl(w);
+		if(w == undefined) {
+			width = DEFAULT_W;
+		}
+		
+		var t = getNearestValue(d, orientName);
+		var theta = orientScl(t);
+		if(t == undefined) {
+			theta = 0;
+		}
+		
+		var r = getNearestValue(d, regName);
+		var reg = regScl(r);
+		if(r == undefined) {
+			reg = DEFAULT_REG;
+		}
+		
+		var s = getNearestValue(d, shapeName);
+		var shape = shapeScl(s);
+		if(s == undefined) {
+			shape = DEFAULT_SHAPE;
+		}
+		
+		return rotate_rect(d.Lat, d.Lng, width, height, theta, reg, shape);
+	});
+}
+
+function update_stroke(name) {
+	strokeName = name;
+	strokeScl.domain(names[strokeName].bounds);
+	
+	d3.selectAll(".dataRect").attr("stroke-width", function(d) {
+		var s = getNearestValue(d, strokeName);
+		if(s == undefined) {
+			return DEFAULT_STROKE;
+		}
+		return strokeScl(s);
+	});
+	
+	d3.select("#stroke_lbnd").html(box_num_format(names[strokeName].bounds[0]));
+	d3.select("#stroke_ubnd").html(box_num_format(names[strokeName].bounds[1]));
+}
+
+function update_reg(name, refresh) {
+	regName = name;
+	regScl.domain(names[regName].bounds);
+	
+	if(refresh) {
+		update_path();
+	}
+	
+	d3.select("#reg_lbnd").html(box_num_format(names[regName].bounds[0]));
+	d3.select("#reg_ubnd").html(box_num_format(names[regName].bounds[1]));
+}
+
+function update_opacity(name) {
+	opacityName = name;
+	opacityScl.domain(names[opacityName].bounds);
+	
+	d3.selectAll(".dataRect").attr("opacity", function(d) {
+		var x = getNearestValue(d, opacityName);
+		if(x == undefined) {
+			return 0.9;
+		}
+		return opacityScl(x);
+	});
+	
+	d3.select("#opacity_lbnd").html(box_num_format(names[opacityName].bounds[0]));
+	d3.select("#opacity_ubnd").html(box_num_format(names[opacityName].bounds[1]));
+}
+
+function getNearestValue(point, name) {
+	return point[names[name].fName];
+}
+
+/*returns a path string representing the oriented shape.
+ * theta in radians*/
+function rotate_rect (lat, lng, w, h, theta, reg, shape) {
+	var cx = projection([lng, lat])[0] + jitter(lng, lat, reg);
+	var cy = projection([lng, lat])[1] + jitter(lat, lng, reg);
+	var w1 = shape * w;
+	var h1 = shape * h;
+	
+	var x0 = cx + rotateX(0, h, theta);
+	var y0 = cy + rotateY(0, h, theta);
+	
+	var x1 = cx + rotateX(w1, h1, theta);
+	var y1 = cy + rotateY(w1, h1, theta);
+	
+	var x2 = cx + rotateX(w, 0, theta);
+	var y2 = cy + rotateY(w, 0, theta);
+	
+	var x3 = cx + rotateX(w1, -h1, theta);
+	var y3 = cy + rotateY(w1, -h1, theta);
+	
+	var x4 = cx + rotateX(0, -h, theta);
+	var y4 = cy + rotateY(0, -h, theta);
+	
+	var x5 = cx + rotateX(-w1, -h1, theta);
+	var y5 = cy + rotateY(-w1, -h1, theta);
+	
+	var x6 = cx + rotateX(-w, 0, theta);
+	var y6 = cy + rotateY(-w, 0, theta);
+	
+	var x7 = cx + rotateX(-w1, h1, theta);
+	var y7 = cy + rotateY(-w1, h1, theta);
+	return "M " + x0 + " " + y0 + " L " + x1 + " " + y1 + " L " + x2 + " " + y2 + " L " + x3 + " " + y3 + " L " + x4 + " " + y4
+		+ " L " + x5 + " " + y5 + " L " + x6 + " " + y6 + " L " + x7 + " " + y7 + " L " + x0 + " " + y0;
+}
+
+function rotateX(x, y, theta) {
+	return x * Math.cos(theta) - y * Math.sin(theta);
+}
+
+function rotateY(x, y, theta) {
+	return x * Math.sin(theta) + y * Math.cos(theta);
+}
+
+function display_info(message) {
+	d3.select("#info_box").html(message);
+}
+
+//seeded random displacement for regularity variation
+function jitter(v1, v2, amount) {
+	var seed = 1000 * v1 + v2;
+	var x = Math.sin(seed) * 10000;
+    return (x - Math.floor(x)) * 2 * amount - amount;
+}
+
+    </script>
   </body>
 </html>
